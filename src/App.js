@@ -47,6 +47,43 @@ class App extends Component {
     this.state = initialState;
   }
 
+  componentDidUpdate() {
+    console.log("[App] componentDidUpdate state=", this.state);
+  }
+
+  componentDidMount() {
+    const token = window.sessionStorage.getItem('token');
+    if(token){
+      fetch(process.env.REACT_APP_DOMAIN + "/signin",{
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+      .then(resp=> resp.json())
+      .then(data => {
+        if(data && data.id){
+          fetch(process.env.REACT_APP_DOMAIN + `/profile/${data.id}`,{
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': token
+            }
+          })
+          .then(resp => resp.json())
+          .then(user => {
+            if(user && user.email){
+              this.loadUser(user);
+              this.onRouteChange("home");
+            }
+          })
+        }
+      })
+      .catch(err=>{console.log(err)})
+    }
+  }
+
   loadUser = data => {
     this.setState({
       user: {
@@ -60,24 +97,27 @@ class App extends Component {
   };
 
   calculateFaceLocation = data => {
-    return data.outputs[0].data.regions.map(x => {
-      const clarifaiFace = x.region_info.bounding_box;
+    if(data && data.outputs){
       const image = document.getElementById("inputimage");
       const width = Number(image.width);
       const height = Number(image.height);
-      console.log("---");
-      console.log(x);
-      return {
-        leftCol: clarifaiFace.left_col * width,
-        topRow: clarifaiFace.top_row * height,
-        rightCol: width - clarifaiFace.right_col * width,
-        bottomRow: height - clarifaiFace.bottom_row * height
-      };
-    });
+      return data.outputs[0].data.regions.map(x => {
+        const clarifaiFace = x.region_info.bounding_box;
+        return {
+          leftCol: clarifaiFace.left_col * width,
+          topRow: clarifaiFace.top_row * height,
+          rightCol: width - clarifaiFace.right_col * width,
+          bottomRow: height - clarifaiFace.bottom_row * height
+        };
+      });
+    }
+    return;
   };
 
   displayFaceBox = box => {
-    this.setState({ box: box });
+    if(box){
+      this.setState({ box: box });
+    }
   };
 
   onInputChange = event => {
@@ -89,7 +129,10 @@ class App extends Component {
     // fetch('https://obscure-spire-25283.herokuapp.com/imageurl', {
     fetch(process.env.REACT_APP_DOMAIN + "/imageurl", {
       method: "post",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': window.sessionStorage.getItem('token')
+      },
       body: JSON.stringify({
         input: this.state.input
       })
@@ -97,10 +140,14 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
+          console.log('user=',this.state.user);
           // fetch('https://obscure-spire-25283.herokuapp.com/image', {
           fetch(process.env.REACT_APP_DOMAIN + "/image", {
             method: "put",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: this.state.user.id
             })

@@ -23,6 +23,10 @@ class Signin extends React.Component {
     this.setState({ signInPassword: event.target.value });
   };
 
+  saveAuthTokenInSession = (token) => {
+    window.sessionStorage.setItem('token',token);
+  }
+
   onSubmitSignIn = () => {
     // fetch('https://obscure-spire-25283.herokuapp.com/signin', {
     fetch(process.env.REACT_APP_DOMAIN + "/signin", {
@@ -35,9 +39,22 @@ class Signin extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.userId) {
-          this.props.loadUser(data);
-          this.props.onRouteChange("home");
+        if (data.userId && data.success === 'true') {
+          this.saveAuthTokenInSession(data.token)
+          fetch(process.env.REACT_APP_DOMAIN + `/profile/${data.userId}`,{
+            method: "get",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': data.token
+            }
+          })
+          .then(resp => resp.json())
+          .then(user => {
+            if(user && user.email){
+              this.props.loadUser(user);
+              this.props.onRouteChange("home");
+            }
+          })
         } else {
           this.unsuccessLogin("Credential Invalid");
         }
