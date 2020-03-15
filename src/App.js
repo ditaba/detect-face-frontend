@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import Particles from "react-particles-js";
-import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import Navigation from "./components/Navigation/Navigation";
-import Signin from "./components/Signin/Signin";
-import Register from "./components/Register/Register";
-import Logo from "./components/Logo/Logo";
-import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-import Rank from "./components/Rank/Rank";
-import Modal from "./components/Modal/Modal";
-import Profile from "./components/Profile/Profile";
-import "./App.css";
+import React, { Component } from 'react';
+import Particles from 'react-particles-js';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import Navigation from './components/Navigation/Navigation';
+import Signin from './components/Signin/Signin';
+import Register from './components/Register/Register';
+import Logo from './components/Logo/Logo';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Rank from './components/Rank/Rank';
+import Modal from './components/Modal/Modal';
+import Profile from './components/Profile/Profile';
+import './App.css';
 
 const particlesOptions = {
   particles: {
@@ -24,20 +24,20 @@ const particlesOptions = {
 };
 
 const initialState = {
-  input: "",
-  imageUrl: "",
+  input: '',
+  imageUrl: '',
   box: [],
-  route: "signin",
+  route: 'signin',
   isSignedIn: false,
   isProfileOpen: false,
   user: {
-    id: "",
-    name: "",
-    email: "",
+    id: '',
+    name: '',
+    email: '',
     entries: 0,
-    joined: "",
-    pet: "",
-    age: ""
+    joined: '',
+    pet: '',
+    age: ''
   }
 };
 
@@ -49,41 +49,43 @@ class App extends Component {
 
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
-    if(token){
-      fetch(process.env.REACT_APP_DOMAIN + "/signin",{
+    if (token) {
+      fetch(process.env.REACT_APP_DOMAIN + '/signin', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token
+          Authorization: token
         }
       })
-      .then(resp=> resp.json())
-      .then(data => {
-        if(data && data.id){
-          fetch(process.env.REACT_APP_DOMAIN + `/profile/${data.id}`,{
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': token
-            }
-          })
-          .then(resp => resp.json())
-          .then(user => {
-            if(user && user.email){
-              this.loadUser(user);
-              this.onRouteChange("home");
-            }
-          })
-        }
-      })
-      .catch(err=>{console.log(err)})
+        .then(resp => resp.json())
+        .then(data => {
+          if (data && data.id) {
+            fetch(process.env.REACT_APP_DOMAIN + `/profile/${data.id}`, {
+              method: 'get',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: token
+              }
+            })
+              .then(resp => resp.json())
+              .then(user => {
+                if (user && user.email) {
+                  this.loadUser(user);
+                  this.onRouteChange('home');
+                }
+              });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 
   loadUser = data => {
     this.setState({
       user: {
-        id: data.userId,
+        id: data.id,
         name: data.name,
         email: data.email,
         entries: data.entries,
@@ -93,8 +95,8 @@ class App extends Component {
   };
 
   calculateFaceLocation = data => {
-    if(data && data.outputs){
-      const image = document.getElementById("inputimage");
+    if (data && data.outputs) {
+      const image = document.getElementById('inputimage');
       const width = Number(image.width);
       const height = Number(image.height);
       return data.outputs[0].data.regions.map(x => {
@@ -111,7 +113,7 @@ class App extends Component {
   };
 
   displayFaceBox = box => {
-    if(box){
+    if (box) {
       this.setState({ box: box });
     }
   };
@@ -123,11 +125,11 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
     // fetch('https://obscure-spire-25283.herokuapp.com/imageurl', {
-    fetch(process.env.REACT_APP_DOMAIN + "/imageurl", {
-      method: "post",
-      headers: { 
-        "Content-Type": "application/json",
-        'Authorization': window.sessionStorage.getItem('token')
+    fetch(process.env.REACT_APP_DOMAIN + '/imageurl', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: window.sessionStorage.getItem('token')
       },
       body: JSON.stringify({
         input: this.state.input
@@ -136,13 +138,13 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          console.log('user=',this.state.user);
+          console.log('user=', this.state.user);
           // fetch('https://obscure-spire-25283.herokuapp.com/image', {
-          fetch(process.env.REACT_APP_DOMAIN + "/image", {
-            method: "put",
-            headers: { 
-              "Content-Type": "application/json",
-              'Authorization': window.sessionStorage.getItem('token')
+          fetch(process.env.REACT_APP_DOMAIN + '/image', {
+            method: 'put',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: window.sessionStorage.getItem('token')
             },
             body: JSON.stringify({
               id: this.state.user.id
@@ -161,9 +163,9 @@ class App extends Component {
   };
 
   onRouteChange = route => {
-    if (route === "signout") {
+    if (route === 'signout') {
       return this.setState(initialState);
-    } else if (route === "home") {
+    } else if (route === 'home') {
       this.setState({ isSignedIn: true });
     }
     this.setState({ route: route });
@@ -186,14 +188,14 @@ class App extends Component {
       user
     } = this.state;
     return (
-      <div className="App">
-        <Particles className="particles" params={particlesOptions} />
+      <div className='App'>
+        <Particles className='particles' params={particlesOptions} />
         <Navigation
           isSignedIn={isSignedIn}
           onRouteChange={this.onRouteChange}
           toggleModal={this.toggleModal}
         />
-        {route === "home" ? (
+        {route === 'home' ? (
           <div>
             <Logo />
             {isProfileOpen && (
@@ -216,7 +218,7 @@ class App extends Component {
             />
             <FaceRecognition box={box} imageUrl={imageUrl} />
           </div>
-        ) : route === "signin" ? (
+        ) : route === 'signin' ? (
           <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
