@@ -47,10 +47,6 @@ class App extends Component {
     this.state = initialState;
   }
 
-  componentDidUpdate() {
-    console.log("[App] componentDidUpdate state=", this.state);
-  }
-
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if(token){
@@ -87,7 +83,7 @@ class App extends Component {
   loadUser = data => {
     this.setState({
       user: {
-        id: data.id,
+        id: data.userId,
         name: data.name,
         email: data.email,
         entries: data.entries,
