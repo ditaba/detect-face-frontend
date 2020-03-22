@@ -1,4 +1,4 @@
-# SmartBrain Frontend
+# SmartBrain FrontEnd 2020
 
 Final project for Udemy course
 
