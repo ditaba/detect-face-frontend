@@ -1,4 +1,5 @@
-# SmartBrain 
+# SmartBrain Frontend
+
 Final project for Udemy course
 
 1. Clone this repo
