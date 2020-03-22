@@ -1,4 +1,5 @@
-# SmartBrain FrontEnd
+# SmartBrain FrontEnd 2020
+
 Final project for Udemy course
 
 1. Clone this repo
