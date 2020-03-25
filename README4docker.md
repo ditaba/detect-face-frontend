@@ -27,6 +27,11 @@ $ docker build -t detect-face-frontend-nginx .
 $ docker run --name detect-face-ui -it -p 80:80 -d detect-face-frontend-nginx
 ```
 
+## Start html static with docker compose
+```
+$ docker-compose up --build
+```
+
 ## Attach to runnning container (Console terminal)
 
 ```
