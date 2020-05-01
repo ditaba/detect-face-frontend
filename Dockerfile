@@ -29,18 +29,18 @@ RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 # Copy the s2i scripts into the nginx image
 # These scripts describe how to build & run the application, and extract artifacts 
 # for downstream builds
-COPY ./s2i/bin/ ${STI_SCRIPTS_PATH}
+# COPY ./s2i/bin/ ${STI_SCRIPTS_PATH}
 
 # The $SOURCE_DIR is dependent on the upstream golang image, based on the 
 # $GOPATH, etc. variable set there
 #
 # Allow random UIDs to write to the $SOURCE_DIR (for OKD/OpenShift)
-RUN mkdir -p $SOURCE_DIR \
-    && chmod 0777 $SOURCE_DIR
+# RUN mkdir -p $SOURCE_DIR \
+#     && chmod 0777 $SOURCE_DIR
 
 WORKDIR $SOURCE_DIR
 
-USER 1001
+# USER 1001
 
 CMD ["nginx", "-g", "daemon off;"]
 
