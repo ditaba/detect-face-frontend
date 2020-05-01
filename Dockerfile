@@ -22,7 +22,7 @@ COPY ./s2i/bin/ ${STI_SCRIPTS_PATH}
 #
 # Allow random UIDs to write to the $SOURCE_DIR (for OKD/OpenShift)
 RUN mkdir -p $SOURCE_DIR \
-    && chmod 0777 $SOURCE_DIR
+    && chmod g+rwx $SOURCE_DIR
 
 WORKDIR $SOURCE_DIR
 
