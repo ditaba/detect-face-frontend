@@ -1,6 +1,13 @@
 # Advantage creating source image build S2i pipeline-okd
 
-### Work
+## Work
+
+```
+imageStream-detectface-builder.yaml
+buildConfig-detectface-builder.yaml
+```
+
+Commands:
 
 ```
 oc create -f imageStream-detectface-builder.yaml
@@ -19,7 +26,6 @@ oc start-build detectface-frontend-appimage
 oc logs -f detectface-frontend-appimage-2-build
 oc logs -f detectface-frontend-appimage-2-build
 history 50
-
 ```
 
-### Not work
+## Not work
