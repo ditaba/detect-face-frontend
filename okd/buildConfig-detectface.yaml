@@ -1,0 +1,32 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: detectface-frontend
+    component: runtime
+  name: detectface-frontend
+spec:
+  source:
+    type: Dockerfile
+    dockerfile: |-
+      FROM scratch
+      COPY . .
+      CMD ["nginx", "-g", "daemon off;"]
+    images:
+      - from:
+          kind: ImageStreamTag
+          name: detectface-frontend-appimage:1.0
+        paths:
+          - sourcePath: /usr/share/nginx/html
+            destinationDir: '.'
+  strategy:
+    type: Docker
+    dockerStrategy: {}
+  output:
+    to:
+      kind: ImageStreamTag
+      name: detectface-frontend:1.0
+  triggers:
+    - type: ConfigChange
+    - imageChange:
+        type: ImageChange

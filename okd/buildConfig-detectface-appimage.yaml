@@ -1,0 +1,26 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: detectface-frontend
+    component: appimage
+  name: detectface-frontend-appimage
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.com/ditaba/detect-face-frontend.git
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: detectface-frontend-builder:1.12
+  output:
+    to:
+      kind: ImageStreamTag
+      name: detectface-frontend-appimage:1.0
+  triggers:
+    - type: ConfigChange
+    - imageChange:
+        type: ImageChange
