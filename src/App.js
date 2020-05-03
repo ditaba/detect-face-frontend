@@ -50,7 +50,7 @@ class App extends Component {
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch(process.env.REACT_APP_DOMAIN + '/signin', {
+      fetch(process.env.REACT_APP_DOMAIN + '/auth/signin', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',

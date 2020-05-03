@@ -12,6 +12,8 @@ LABEL io.k8s.description="Builder image for compiling and testing Go application
     io.k8s.display-name="detectface-frontend-builder}" \
     io.openshift.s2i.scripts-url=image://${STI_SCRIPTS_PATH}
 
+WORKDIR $SOURCE_DIR
+
 COPY --from=html-static /app/detectface-frontend/build .
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -37,8 +39,6 @@ RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 # Allow random UIDs to write to the $SOURCE_DIR (for OKD/OpenShift)
 # RUN mkdir -p $SOURCE_DIR \
 #     && chmod 0777 $SOURCE_DIR
-
-WORKDIR $SOURCE_DIR
 
 # USER 1001
 
